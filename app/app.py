@@ -5,6 +5,7 @@ import os
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
 app.config['UPLOAD_FOLDER'] = os.environ['UPLOAD_FOLDER']
+app.secret_key = 'AVVCDF654#@'
 ALLOWED_EXTENSIONS = {'txt'}
 
 

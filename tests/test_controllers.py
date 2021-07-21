@@ -34,6 +34,12 @@ def test_file_path():
 
 
 @pytest.fixture()
+def test_not_allowed_extension_file_path():
+    parent_path = pathlib.Path(__file__).parent.resolve()
+    return os.path.join(parent_path, 'dados.pdf')
+
+
+@pytest.fixture()
 def test_file_name(test_file_path):
     return os.path.basename(test_file_path)
 
@@ -47,7 +53,7 @@ def test_get_home(start_server, upload_folder):
     resp: requests.Response
     resp = requests.get("http://127.0.0.1:5000/")
     assert resp.status_code == 200
-    assert "Hello World!" in resp.text
+    assert "<title>Nama app - upload de arquivo</title>" in resp.text
 
 
 def test_post_home_success(test_file_path, test_file_name, upload_folder, start_server):
@@ -62,4 +68,17 @@ def test_post_home_success(test_file_path, test_file_name, upload_folder, start_
     mtime = datetime.datetime.fromtimestamp(fname.stat().st_mtime)
     assert (datetime.datetime.now() - mtime).seconds <= 10
 
+
+def test_post_home_no_file(start_server):
+    resp: requests.Response
+    files = {}
+    resp = requests.post("http://127.0.0.1:5000/", files=files)
+    assert "<p>Sem arquivo!</p>" in resp.text
+
+
+def test_post_home_extension_not_allowed(start_server, test_not_allowed_extension_file_path):
+    resp: requests.Response
+    files = {'file': open(test_not_allowed_extension_file_path, 'rb')}
+    resp = requests.post("http://127.0.0.1:5000/", files=files)
+    assert "<p>Extensão de arquivo inválida!</p>" in resp.text
 
