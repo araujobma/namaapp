@@ -1,3 +1,4 @@
+import re
 import subprocess
 import signal
 import pytest
@@ -60,9 +61,11 @@ def test_post_home_success(test_file_path, test_file_name, upload_folder, start_
     resp: requests.Response
     files = {'file': open(test_file_path, 'rb')}
     resp = requests.post("http://127.0.0.1:5000/", files=files)
-    uploaded_file_path = os.path.join(upload_folder, test_file_name)
+    tfname_id = re.search(r'Arquivo\scarregado:\s(dados-.+\.txt)', resp.text).group(1)
+    uploaded_file_path = os.path.join(upload_folder, tfname_id)
+    uploaded_file_name = os.path.basename(uploaded_file_path)
     assert resp.status_code == 200
-    assert test_file_name in os.listdir(upload_folder)
+    assert uploaded_file_name in os.listdir(upload_folder)
     assert filecmp.cmp(test_file_path, uploaded_file_path, shallow=False)
     fname = pathlib.Path(uploaded_file_path)
     mtime = datetime.datetime.fromtimestamp(fname.stat().st_mtime)

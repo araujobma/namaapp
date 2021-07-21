@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, flash, redirect
+from flask import Flask, render_template, request, flash, redirect, session
 from werkzeug.utils import secure_filename
 import os
+from uuid import uuid4
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
@@ -24,9 +25,12 @@ def home():
             return redirect(request.url)
         file = request.files['file']
         if file and allowed_file(file.filename):
+            session['id'] = uuid4()
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return render_template('file_data.html')
+            fname_split = filename.split('.')
+            fname_id = fname_split[0] + '-' + str(session['id']) + '.' + fname_split[1]
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], fname_id))
+            return render_template('file_data.html', data={'filename': fname_id})
         else:
             flash('Extensão de arquivo inválida!')
             return redirect(request.url)

@@ -2,3 +2,8 @@
 {% for message in get_flashed_messages() %}
     <p>{{ message }}</p>
 {% endfor %}
+<h2>Selecione o arquivo para upload</h2>
+<form method=post enctype=multipart/form-data>
+    <input type=file name=file>
+    <input type=submit value=Upload>
+</form>
