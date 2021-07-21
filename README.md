@@ -15,7 +15,7 @@ export SQLALCHEMY_DATABASE_URI=sqlite:////tmp/nama.db
 export UPLOAD_FOLDER=/tmp
 
 # Creates database and tables
-python3 -c 'from models import db; db.create_all()'
+python3 -c 'from app import db; db.create_all()'
 
 export FLASK_APP=app
 flask run

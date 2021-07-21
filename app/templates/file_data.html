@@ -1,5 +1,58 @@
+<style>
+
+table, th, td {
+  border: 1px solid black;
+}
+</style>
+
 <title>Nama app - dados do arquivo</title>
 {% for message in get_flashed_messages() %}
     <p>{{ message }}</p>
 {% endfor %}
-<p>Arquivo carregado: {{ data.filename }}<p>
+<p>Arquivo carregado: {{ data.filename }}</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Comprador</th>
+            <th>Descrição</th>
+            <th>Preço(R$)</th>
+            <th>Quantidade</th>
+            <th>Endereço</th>
+            <th>Fornecedor</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sale in data.sales %}
+            <tr>
+                <td>
+                    {{ sale.buyer_name }}
+                </td>
+                <td>
+                    {{ sale.description }}
+                </td>
+                <td>
+                    {{ sale.price }}
+                </td>
+                <td>
+                    {{ sale.quantity }}
+                </td>
+                <td>
+                    {{ sale.address }}
+                </td>
+                <td>
+                    {{ sale.supplier_name }}
+                </td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>
+                Total das Vendas(R$):
+            </td>
+            <td>
+                {{ data.total }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
